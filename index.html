@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비즈니스 지원 사업 알림이</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="glass-header">
+        <div class="container header-content">
+            <div class="logo">BizSupport<span class="highlight">.kr</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">홈</a></li>
+                    <li><a href="#featured">주요 공고</a></li>
+                    <li><a href="#all">전체 사업</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="container hero-content">
+                <h1>당신의 비즈니스를 위한<br><span class="gradient-text">최적의 지원 사업</span>을 찾아보세요</h1>
+                <p class="hero-subtitle">정부 지원금, 창업 경진대회, R&D 과제까지 한눈에 확인하세요.</p>
+                
+                <div class="search-container">
+                    <div class="input-wrapper">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="searchInput" placeholder="관심 분야나 키워드를 검색해보세요 (예: 마케팅, AI, 청년창업)">
+                    </div>
+                </div>
+
+                <div class="tags-container">
+                    <span class="tag">#초기창업</span>
+                    <span class="tag">#R&D</span>
+                    <span class="tag">#소상공인</span>
+                    <span class="tag">#AI</span>
+                    <span class="tag">#수출지원</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="results" class="results-section container">
+            <div class="section-header">
+                <h2>지원 사업 목록 <span class="count" id="resultCount">0건</span></h2>
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">전체</button>
+                    <button class="filter-btn" data-filter="support">지원금</button>
+                    <button class="filter-btn" data-filter="contest">공모전</button>
+                    <button class="filter-btn" data-filter="loan">융자/보증</button>
+                </div>
+            </div>
+
+            <div class="cards-grid" id="cardsGrid">
+                <!-- Cards will be injected here by JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 BizSupport.kr - All rights reserved.</p>
+            <p class="footer-note">* 본 사이트는 포트폴리오 목적으로 제작된 데모 사이트입니다.</p>
+        </div>
+    </footer>
+
+    <script src="scripts/data.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
