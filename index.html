@@ -21,6 +21,9 @@
     <meta name="google-adsense-account" content="ca-pub-4540972419156905">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4540972419156905"
         crossorigin="anonymous"></script>
+
+    <!-- XEIcon for beautiful icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
 </head>
 
 <body>
@@ -51,28 +54,14 @@
         </div>
     </header>
 
-    <main class="main-layout">
-        <!-- Left Sidebar Ad -->
-        <aside class="ad-sidebar side-left">
-            <div class="adsense-container ad-skyscraper">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-4540972419156905"
-                     data-ad-slot="##########"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <span class="ad-placeholder-text">Side Ad (L)</span>
-            </div>
-        </aside>
-
-        <section class="content-area">
-            <section class="hero-section">
-
+    <main>
+        <!-- Full-width Hero Section -->
+        <section class="hero-section">
             <div class="container">
                 <div class="hero-badge">
                     <span></span> 실시간 창업지원 정보 업데이트 중
                 </div>
-                <h1>성장을 위한 가장 <br><span class="gradient-text">확실한 가이드</span></h1>
+                <h1 class="hero-title">성장을 위한 가장 <br><span class="gradient-text">확실한 가이드</span></h1>
                 <p class="hero-subtitle">BizSupport는 인공지능 크롤러를 통해 전국 모든 부처의 창업 지원금과 R&D 과제를 가장 빠르게 전달합니다.</p>
 
                 <div class="search-container">
@@ -80,7 +69,7 @@
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            <line x1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                         <input type="text" id="searchInput" placeholder="키워드로 검색 (예: 초기창업, 마케팅, AI바우처)">
                     </div>
@@ -103,142 +92,128 @@
             </div>
         </section>
 
-        <section id="results" class="results-section">
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-title">
-                        <h2>최신 공고 목록 <span class="count" id="resultCount">0</span></h2>
-                    </div>
-                    <div class="filters-wrapper">
-                        <div class="filters">
-                            <button class="filter-btn active" data-filter="all">전체</button>
-                            <button class="filter-btn" data-filter="support">지원금</button>
-                            <button class="filter-btn" data-filter="contest">공모전</button>
-                            <button class="filter-btn" data-filter="loan">금융지원</button>
-                        </div>
-                        <button class="advanced-filter-toggle" id="filterToggle">
-                            <i class="xi-filter"></i> 상세 필터
-                        </button>
-                    </div>
-
-                    <!-- Advanced Filter Panel -->
-                    <div class="filter-panel" id="filterPanel">
-                        <div class="filter-grid">
-                            <div class="filter-group">
-                                <h3>지역</h3>
-                                <div class="filter-options" id="filter-region">
-                                    <button class="filter-opt active" data-value="all">전국</button>
-                                    <button class="filter-opt" data-value="서울">서울</button>
-                                    <button class="filter-opt" data-value="경기">경기</button>
-                                    <button class="filter-opt" data-value="부산">부산</button>
-                                    <button class="filter-opt" data-value="대전">대전</button>
-                                </div>
-                            </div>
-                            <div class="filter-group">
-                                <h3>기관구분</h3>
-                                <div class="filter-options" id="filter-agency">
-                                    <button class="filter-opt active" data-value="all">전체</button>
-                                    <button class="filter-opt" data-value="공공">공공</button>
-                                    <button class="filter-opt" data-value="민간">민간</button>
-                                </div>
-                            </div>
-                            <div class="filter-group">
-                                <h3>창업업력</h3>
-                                <div class="filter-options" id="filter-term">
-                                    <button class="filter-opt active" data-value="all">전체</button>
-                                    <button class="filter-opt" data-value="예비창업자">예비창업자</button>
-                                    <button class="filter-opt" data-value="1년미만">1년미만</button>
-                                    <button class="filter-opt" data-value="3년미만">3년미만</button>
-                                    <button class="filter-opt" data-value="7년미만">7년미만</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="cards-grid" id="cardsGrid">
-                    <!-- Cards will be injected by app.js -->
-                </div>
-
-                <!-- Footer AdSense Slot -->
-                <div class="adsense-container ad-footer">
+        <!-- 3-Column Layout for Results -->
+        <div class="main-layout">
+            <!-- Left Sidebar Ad -->
+            <aside class="ad-sidebar side-left">
+                <div class="adsense-container ad-skyscraper">
                     <ins class="adsbygoogle"
                          style="display:block"
                          data-ad-client="ca-pub-4540972419156905"
                          data-ad-slot="##########"
-                         data-ad-format="horizontal"
+                         data-ad-format="auto"
                          data-full-width-responsive="true"></ins>
-                    <span class="ad-placeholder-text">Banner Ad Placement Area</span>
+                    <span class="ad-placeholder-text">Side Ad (L)</span>
                 </div>
-            </div>
-        </section>
+            </aside>
 
-        <!-- Right Sidebar Ad -->
-        <aside class="ad-sidebar side-right">
-            <div class="adsense-container ad-skyscraper">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-4540972419156905"
-                     data-ad-slot="##########"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <span class="ad-placeholder-text">Side Ad (R)</span>
-            </div>
-        </aside>
+            <section class="content-area">
+                <section id="results" class="results-section">
+                    <div class="container">
+                        <div class="section-header">
+                            <div class="section-title">
+                                <h2>최신 공고 목록 <span class="count" id="resultCount">0</span></h2>
+                            </div>
+                            <div class="filters-wrapper">
+                                <div class="filters">
+                                    <button class="filter-btn active" data-filter="all">전체</button>
+                                    <button class="filter-btn" data-filter="support">지원금</button>
+                                    <button class="filter-btn" data-filter="contest">공모전</button>
+                                    <button class="filter-btn" data-filter="loan">금융지원</button>
+                                </div>
+                                <button class="advanced-filter-toggle" id="filterToggle">
+                                    <i class="xi-filter"></i> 상세 필터
+                                </button>
+                            </div>
+
+                            <!-- Advanced Filter Panel -->
+                            <div class="filter-panel" id="filterPanel">
+                                <div class="filter-grid">
+                                    <div class="filter-group">
+                                        <h3>지역</h3>
+                                        <div class="filter-options" id="filter-region">
+                                            <button class="filter-opt active" data-value="all">전국</button>
+                                            <button class="filter-opt" data-value="서울">서울</button>
+                                            <button class="filter-opt" data-value="경기">경기</button>
+                                            <button class="filter-opt" data-value="부산">부산</button>
+                                            <button class="filter-opt" data-value="대전">대전</button>
+                                        </div>
+                                    </div>
+                                    <div class="filter-group">
+                                        <h3>기관구분</h3>
+                                        <div class="filter-options" id="filter-agency">
+                                            <button class="filter-opt active" data-value="all">전체</button>
+                                            <button class="filter-opt" data-value="공공">공공</button>
+                                            <button class="filter-opt" data-value="민간">민간</button>
+                                        </div>
+                                    </div>
+                                    <div class="filter-group">
+                                        <h3>창업업력</h3>
+                                        <div class="filter-options" id="filter-term">
+                                            <button class="filter-opt active" data-value="all">전체</button>
+                                            <button class="filter-opt" data-value="예비창업자">예비창업자</button>
+                                            <button class="filter-opt" data-value="1년미만">1년미만</button>
+                                            <button class="filter-opt" data-value="3년미만">3년미만</button>
+                                            <button class="filter-opt" data-value="7년미만">7년미만</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cards-grid" id="cardsGrid">
+                            <!-- Cards will be injected by app.js -->
+                        </div>
+
+                        <!-- Footer AdSense Slot -->
+                        <div class="adsense-container ad-footer">
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-client="ca-pub-4540972419156905"
+                                 data-ad-slot="##########"
+                                 data-ad-format="horizontal"
+                                 data-full-width-responsive="true"></ins>
+                            <span class="ad-placeholder-text">Banner Ad Placement Area</span>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- Right Sidebar Ad -->
+            <aside class="ad-sidebar side-right">
+                <div class="adsense-container ad-skyscraper">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-4540972419156905"
+                         data-ad-slot="##########"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <span class="ad-placeholder-text">Side Ad (R)</span>
+                </div>
+            </aside>
+        </div>
     </main>
 
     <footer>
         <div class="container footer-content">
-            <div class="logo footer-logo">
-                BizSupport.kr
+            <div class="footer-info">
+                <div class="logo">BizSupport<span class="highlight">.kr</span></div>
+                <p>전국의 모든 창업지원 정보를 한눈에 확인하세요.</p>
             </div>
-            <ul class="footer-links">
-                <li><a href="#">이용약관</a></li>
-                <li><a href="#">개인정보처리방침</a></li>
-                <li><a href="#">공고문의</a></li>
-            </ul>
-            <p class="copyright">&copy; 2026 BizSupport. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">이용약관</a>
+                <a href="#">개인정보처리방침</a>
+                <a href="#">문의하기</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 BizSupport.kr. All rights reserved.
         </div>
     </footer>
 
-    <!-- Bottom Navigation for Mobile -->
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
-            <span>홈</span>
-        </a>
-        <a href="#results" class="nav-item">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <span>검색</span>
-        </a>
-        <a href="settings.html" class="nav-item">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path
-                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                </path>
-            </svg>
-            <span>설정</span>
-        </a>
-    </nav>
-
+    <!-- Data and Application Script -->
     <script src="scripts/data.js"></script>
     <script src="scripts/app.js"></script>
-
-    <!-- Google AdSense Init -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4540972419156905"
-        crossorigin="anonymous"></script>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
 </body>
 
 </html>

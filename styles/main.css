@@ -160,7 +160,7 @@ body::before {
     justify-content: center;
     gap: 20px;
     padding: 0 20px;
-    margin: 100px auto 0;
+    margin: 40px auto 0; /* Reduced margin since hero is above */
     max-width: 1800px;
 }
 
@@ -173,7 +173,7 @@ body::before {
     width: 160px;
     height: 600px;
     position: sticky;
-    top: 120px;
+    top: 100px; /* Aligned with fixed header + some gap */
 }
 
 .content-area {
