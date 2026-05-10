@@ -167,13 +167,15 @@ body::before {
 .ad-sidebar {
     width: var(--sidebar-width);
     flex-shrink: 0;
+    align-self: stretch; /* 부모인 main-layout의 전체 높이를 차지하게 함 */
 }
 
 .ad-skyscraper {
     width: 160px;
     height: 600px;
     position: sticky;
-    top: 100px; /* Aligned with fixed header + some gap */
+    top: 100px; /* 스크롤 시 헤더 아래에 딱 붙어서 따라옴 */
+    z-index: 10;
 }
 
 .content-area {
