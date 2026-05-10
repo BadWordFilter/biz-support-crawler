@@ -64,7 +64,7 @@ def fetch_data():
             "organization": "중소벤처기업부",
             "category": "contest",
             "deadline": "2026-04-30",
-            "dDay: "D-120",
+            "dDay": "D-120",
             "views": 45000,
             "tags": ["#경진대회", "#상금", "#대통령상"],
             "link": "https://www.k-startup.go.kr/"
