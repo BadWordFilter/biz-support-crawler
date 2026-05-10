@@ -58,24 +58,32 @@ def fetch_data():
                 if not title_el: continue
                 title = title_el.text.strip()
                 
-                # 2. 상세 링크 및 ID
-                # 부모나 형제 요소에서 a 태그 탐색
+                # 2. 상세 링크 및 ID (정밀 추출)
+                # a 태그는 .slide의 직계 자식이거나 .ann_cont의 부모일 수 있음
                 link_el = item.find_parent('a') or item.select_one('a')
-                if not link_el and item.parent: link_el = item.parent.select_one('a')
+                if not link_el and item.parent: 
+                    link_el = item.parent.select_one('a') or item.parent.find_parent('a')
                 
                 pbanc_sn = ""
                 detail_url = "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
+                
                 if link_el and 'href' in link_el.attrs:
-                    # javascript:go_view('177550') 형태에서 숫자 ID 추출
-                    id_match = re.search(r"go_view\('(\d+)'\)", link_el['href'])
+                    href = link_el['href']
+                    # 따옴표가 있든 없든 숫자 ID를 추출 (예: go_view(177550) 또는 go_view('177550'))
+                    id_match = re.search(r"go_view\((\d+)\)", href) or re.search(r"go_view\('(\d+)'\)", href)
                     if id_match:
                         pbanc_sn = id_match.group(1)
-                        # 요청하신 상세 페이지 형식 적용
                         detail_url = f"https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?pbancClssCd=PBC010&schM=view&pbancSn={pbanc_sn}"
+                    else:
+                        # href 자체에 ID가 포함된 경우도 대비
+                        sn_match = re.search(r"pbancSn=(\d+)", href)
+                        if sn_match:
+                            pbanc_sn = sn_match.group(1)
+                            detail_url = f"https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?pbancClssCd=PBC010&schM=view&pbancSn={pbanc_sn}"
 
                 # 3. 카테고리 및 D-Day (상단 배지 영역)
                 # .slide 내부에서는 .ann_top 아래에 위치함
-                top_el = item.find_previous_sibling('.ann_top') or item.select_one('.ann_top') or item.find('.ann_top')
+                top_el = item.find_previous_sibling('.ann_top') or item.select_one('.ann_top')
                 if not top_el and item.parent: top_el = item.parent.select_one('.ann_top')
                 
                 category_text = "지원사업"
@@ -101,7 +109,10 @@ def fetch_data():
                 organization = "기관 정보 없음"
                 views_count = 0
                 if len(info_texts) >= 1:
-                    organization = info_texts[0].split(':')[-1].strip()
+                    # '기관명 : OOO' 형태 또는 그냥 'OOO'
+                    org_text = info_texts[0]
+                    organization = org_text.split(':')[-1].strip() if ':' in org_text else org_text
+                
                 if len(info_texts) >= 2:
                     views_match = re.search(r'(\d+)', info_texts[-1])
                     if views_match: views_count = int(views_match.group(1))
