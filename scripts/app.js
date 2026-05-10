@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultCount = document.getElementById('resultCount');
     const filterToggle = document.getElementById('filterToggle');
     const filterPanel = document.getElementById('filterPanel');
+    const pagination = document.getElementById('pagination');
 
     let currentFilter = 'all';
     let currentSearch = '';
@@ -13,6 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
         agency: 'all',
         term: 'all'
     };
+
+    // Pagination State
+    let currentPage = 1;
+    const itemsPerPage = 20;
+    let filteredData = [];
 
     // Initialize
     if (typeof supportPrograms !== 'undefined') {
@@ -37,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentFilter = btn.dataset.filter;
+            currentPage = 1; // Reset to page 1
             filterAndRender();
         });
     });
@@ -49,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll(`#${groupId} .filter-opt`).forEach(o => o.classList.remove('active'));
                 opt.classList.add('active');
                 activeAdvancedFilters[key] = opt.dataset.value;
+                currentPage = 1; // Reset to page 1
                 filterAndRender();
             });
         });
@@ -64,12 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
             currentSearch = e.target.value.toLowerCase();
+            currentPage = 1; // Reset to page 1
             filterAndRender();
         }, 150);
     });
 
     function filterAndRender() {
-        const filtered = supportPrograms.filter(program => {
+        filteredData = supportPrograms.filter(program => {
             const matchFilter = currentFilter === 'all' || program.category === currentFilter;
             const matchSearch = program.title.toLowerCase().includes(currentSearch) ||
                 program.organization.toLowerCase().includes(currentSearch);
@@ -81,14 +90,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return matchFilter && matchSearch && matchRegion && matchAgency && matchTerm;
         });
 
-        renderCards(filtered);
+        renderCards();
+        renderPagination();
     }
 
-    function renderCards(programs) {
+    function renderCards() {
         cardsGrid.innerHTML = '';
-        resultCount.textContent = programs.length;
+        resultCount.textContent = filteredData.length;
 
-        if (programs.length === 0) {
+        if (filteredData.length === 0) {
             cardsGrid.innerHTML = `
                 <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 100px 20px; color: var(--text-low);">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 20px; opacity: 0.5;">
@@ -102,8 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        programs.forEach((program, index) => {
-            // Inject In-feed Ad every 8 cards
+        // Slice data for pagination
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedItems = filteredData.slice(startIndex, endIndex);
+
+        paginatedItems.forEach((program, index) => {
+            // Inject In-feed Ad every 8 cards (but limit within page)
             if (index > 0 && index % 8 === 0) {
                 const adContainer = document.createElement('div');
                 adContainer.className = 'adsense-container ad-infeed fade-in-up';
@@ -124,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'card fade-in-up';
             card.style.animationDelay = `${index * 0.05}s`;
 
-            // Badge Setup
             let badgeLabel = '';
             let badgeClass = '';
             switch (program.category) {
@@ -154,9 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="d-day-pill">${program.dDay}</span>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <span class="deadline-txt">마감: ${program.deadline}</span>
-                    <div class="card-tag-preview">${program.startupTerm}</div>
+                <div class="card-footer" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-low);">
+                    <span>마감: ${program.deadline}</span>
+                    <span style="color: var(--accent-primary); font-weight: 600;">${program.startupTerm}</span>
                 </div>
             `;
 
@@ -166,5 +180,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
             cardsGrid.appendChild(card);
         });
+    }
+
+    function renderPagination() {
+        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+        pagination.innerHTML = '';
+
+        if (totalPages <= 1) return;
+
+        // Previous Button
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'page-btn page-btn-wide';
+        prevBtn.innerHTML = '<i class="xi-angle-left"></i> 이전';
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => {
+            currentPage--;
+            updateUI();
+        };
+        pagination.appendChild(prevBtn);
+
+        // Page Numbers (Visible window logic)
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, startPage + 4);
+        if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
+
+        for (let i = startPage; i <= endPage; i++) {
+            const btn = document.createElement('button');
+            btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+            btn.textContent = i;
+            btn.onclick = () => {
+                currentPage = i;
+                updateUI();
+            };
+            pagination.appendChild(btn);
+        }
+
+        // Next Button
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'page-btn page-btn-wide';
+        nextBtn.innerHTML = '다음 <i class="xi-angle-right"></i>';
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => {
+            currentPage++;
+            updateUI();
+        };
+        pagination.appendChild(nextBtn);
+    }
+
+    function updateUI() {
+        renderCards();
+        renderPagination();
+        document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
     }
 });
