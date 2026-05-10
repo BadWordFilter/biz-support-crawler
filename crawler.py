@@ -1,172 +1,149 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-import datetime
-import os
 import re
+from datetime import datetime
 
-# K-Startup 실시간 공고 페이지
+# K-Startup 공고 목록 URL
 TARGET_URL = "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
-OUTPUT_FILE = "scripts/data.js"
 
 def calculate_dday(deadline_str):
     try:
-        clean_date = re.sub(r'[^0-9.]', '', deadline_str).strip('.')
-        deadline = datetime.datetime.strptime(clean_date, '%Y.%m.%d').date()
-        today = datetime.date.today()
-        delta = deadline - today
-        if delta.days > 0: return f"D-{delta.days}"
+        if not deadline_str or "상시" in deadline_str:
+            return "상시"
+        deadline_date = datetime.strptime(deadline_str.replace('.', '-'), '%Y-%m-%d')
+        today = datetime.now()
+        delta = deadline_date - today
+        if delta.days < 0: return "마감"
         elif delta.days == 0: return "D-Day"
-        else: return "마감"
-    except:
-        return "상시"
+        else: return f"D-{delta.days}"
+    except: return "상시"
 
-def map_category(category_text):
-    if '지원' in category_text or '사업화' in category_text: return 'support'
-    if '공모' in category_text or '경진' in category_text: return 'contest'
-    if '금융' in category_text or '융자' in category_text or '보증' in category_text: return 'loan'
-    return 'support'
+def map_category(cat_text):
+    if "사업화" in cat_text: return "support"
+    if "금융" in cat_text or "융자" in cat_text or "보증" in cat_text: return "loan"
+    if "기술개발" in cat_text or "R&D" in cat_text: return "support"
+    if "행사" in cat_text or "네트워크" in cat_text: return "contest"
+    return "support"
 
 def fetch_data():
-    print("크롤러 시작: K-Startup 실시간 데이터를 수집합니다...")
+    print("K-Startup multi-page crawling start...")
+    all_crawled_data = []
+    seen_titles = set()
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-        'Referer': 'https://www.k-startup.go.kr/',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     }
 
-    try:
-        session = requests.Session()
-        # 공통 파라미터 적용 (모집중 PBC010)
-        response = session.get(TARGET_URL, headers=headers, params={'pbancClssCd': 'PBC010'}, timeout=20)
-        response.raise_for_status()
-        response.encoding = 'utf-8'
-        soup = BeautifulSoup(response.text, 'html.parser')
+    # 1페이지부터 5페이지까지 수집 (약 100개 공고)
+    for page in range(1, 6):
+        url = f"{TARGET_URL}?page={page}"
+        print(f"Reading Page {page}...")
         
-        # 분석 결과: K-Startup 공고는 .slide 또는 .biz_list > li 구조에 위치함
-        items = soup.select('.slide') or soup.select('.biz_list > li') or soup.select('.list_type01 > li')
-        
-        if not items:
-            print("목록을 찾지 못해 전체 페이지에서 개별 항목을 직접 탐색합니다.")
-            items = soup.select('.ann_cont') # 개별 공고 내용 컨테이너
+        try:
+            response = requests.get(url, headers=headers, timeout=15)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, 'html.parser')
+            
+            # K-Startup 리스트 구조: .board_list-wrap 내의 li 또는 .biz_list > li
+            items = soup.select('.board_list-wrap > ul > li') or soup.select('.biz_list > li') or soup.select('.list_type01 > li')
+            
+            # 만약 위 선택자로 안 잡히면 더 넓은 범위로 탐색
+            if not items:
+                items = soup.find_all('li', class_=re.compile(r'board|list'))
 
-        crawled_data = []
-        for item in items:
-            try:
-                # 1. 제목 (여러 클래스 대응)
-                title_el = item.select_one('.tit') or item.select_one('.tit_wrap p')
+            count_on_page = 0
+            for item in items:
+                title_el = item.select_one('.tit') or item.select_one('p.title')
                 if not title_el: continue
+                
                 title = title_el.text.strip()
+                # 중복 제거 (이미 수집한 제목이면 스킵)
+                if title in seen_titles: continue
                 
-                # 2. 상세 링크 및 ID (정밀 추출)
-                # a 태그는 .slide의 직계 자식이거나 .ann_cont의 부모일 수 있음
-                link_el = item.find_parent('a') or item.select_one('a')
-                if not link_el and item.parent: 
-                    link_el = item.parent.select_one('a') or item.parent.find_parent('a')
-                
-                pbanc_sn = ""
-                detail_url = "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
-                
-                if link_el and 'href' in link_el.attrs:
-                    href = link_el['href']
-                    # 따옴표가 있든 없든 숫자 ID를 추출 (예: go_view(177550) 또는 go_view('177550'))
-                    id_match = re.search(r"go_view\((\d+)\)", href) or re.search(r"go_view\('(\d+)'\)", href)
-                    if id_match:
-                        pbanc_sn = id_match.group(1)
-                        detail_url = f"https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?pbancClssCd=PBC010&schM=view&pbancSn={pbanc_sn}"
-                    else:
-                        # href 자체에 ID가 포함된 경우도 대비
-                        sn_match = re.search(r"pbancSn=(\d+)", href)
-                        if sn_match:
-                            pbanc_sn = sn_match.group(1)
-                            detail_url = f"https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?pbancClssCd=PBC010&schM=view&pbancSn={pbanc_sn}"
+                # 상세 데이터 추출 시작
+                try:
+                    link_el = item.select_one('a')
+                    pbanc_sn = ""
+                    detail_url = TARGET_URL
+                    if link_el and 'href' in link_el.attrs:
+                        href = link_el['href']
+                        id_match = re.search(r"go_view\((\d+)\)", href) or re.search(r"go_view\('(\d+)'\)", href)
+                        if id_match:
+                            pbanc_sn = id_match.group(1)
+                            detail_url = f"{TARGET_URL}?pbancClssCd=PBC010&schM=view&pbancSn={pbanc_sn}"
 
-                # 3. 상세 메타데이터 추출 (확장)
-                category_text = "지원사업"
-                agency_type = "공공" # 기본값
-                region = "전국"
-                target_audience = "일반인"
-                startup_term = "전체"
-                
-                # 카테고리 (flag)
-                cat_el = item.select_one('.flag.type07') or item.select_one('.badge')
-                if cat_el: category_text = cat_el.text.strip()
-                
-                # 기관구분 (flag_agency)
-                agency_el = item.select_one('.flag_agency')
-                if agency_el: agency_type = agency_el.text.strip()
-                
-                # 제목에서 지역/업력 유추 (고급 필터용)
-                regions = ["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"]
-                for r in regions:
-                    if r in title:
-                        region = r
-                        break
-                
-                if "예비" in title: startup_term = "예비창업자"
-                elif "7년" in title: startup_term = "7년미만"
-                elif "3년" in title: startup_term = "3년미만"
-                elif "1년" in title: startup_term = "1년미만"
+                    category_text = "지원사업"
+                    cat_el = item.select_one('.flag') or item.select_one('.badge')
+                    if cat_el: category_text = cat_el.text.strip()
+                    
+                    agency_type = "공공"
+                    agency_el = item.select_one('.flag_agency') or item.select_one('.org')
+                    if agency_el: agency_type = agency_el.text.strip()
 
-                # 4. 기관명 및 조회수
-                info_list = item.select('.info li') or item.select('ul.info li') or item.select('.bottom .list')
-                info_texts = [li.text.strip() for li in info_list]
-                
-                organization = "기관 정보 없음"
-                views_count = 0
-                for info in info_texts:
-                    if "조회" in info:
-                        v_match = re.search(r'(\d+)', info)
-                        if v_match: views_count = int(v_match.group(1).replace(',', ''))
-                    elif "일자" not in info and ":" not in info and len(info) < 20:
-                        organization = info.strip()
-                    elif ":" in info:
-                        parts = info.split(':')
-                        if "기관" in parts[0] or "부서" in parts[0]:
-                            organization = parts[1].strip()
+                    region = "전국"
+                    regions = ["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"]
+                    for r in regions:
+                        if r in title:
+                            region = r
+                            break
 
-                # D-Day 및 날짜
-                deadline_date = "상시모집"
-                d_day = "상시"
-                date_texts = [t for t in info_texts if "마감일자" in t]
-                if date_texts:
-                    d_match = re.search(r'\d{4}-\d{2}-\d{2}', date_texts[0])
-                    if d_match:
-                        deadline_date = d_match.group(0).replace('-', '.')
-                        d_day = calculate_dday(deadline_date)
+                    startup_term = "전체"
+                    if "예비" in title: startup_term = "예비창업자"
+                    elif "7년" in title: startup_term = "7년미만"
+                    elif "3년" in title: startup_term = "3년미만"
 
-                crawled_data.append({
-                    "id": pbanc_sn or str(len(crawled_data) + 1),
-                    "title": title,
-                    "organization": organization,
-                    "category": map_category(category_text),
-                    "agencyType": agency_type,
-                    "region": region,
-                    "target": target_audience,
-                    "startupTerm": startup_term,
-                    "deadline": deadline_date,
-                    "dDay": d_day,
-                    "views": views_count,
-                    "tags": [f"#{category_text}", f"#{region}", f"#{agency_type}"],
-                    "link": detail_url
-                })
+                    info_list = item.select('.info li') or item.select('ul.info li')
+                    organization = "기관 정보 없음"
+                    views_count = 0
+                    deadline_date = "상시모집"
+                    
+                    for info in info_list:
+                        txt = info.text.strip()
+                        if "조회" in txt:
+                            v_m = re.search(r'(\d+)', txt)
+                            if v_m: views_count = int(v_m.group(1))
+                        elif "마감" in txt:
+                            d_m = re.search(r'\d{4}-\d{2}-\d{2}', txt)
+                            if d_m: deadline_date = d_m.group(0).replace('-', '.')
+                        elif ":" not in txt and len(txt) < 30:
+                            organization = txt
 
-            except: continue
+                    all_crawled_data.append({
+                        "id": pbanc_sn or str(len(all_crawled_data) + 1),
+                        "title": title,
+                        "organization": organization,
+                        "category": map_category(category_text),
+                        "agencyType": agency_type,
+                        "region": region,
+                        "startupTerm": startup_term,
+                        "deadline": deadline_date,
+                        "dDay": calculate_dday(deadline_date),
+                        "views": views_count,
+                        "tags": [f"#{category_text}", f"#{region}"],
+                        "link": detail_url
+                    })
+                    seen_titles.add(title)
+                    count_on_page += 1
+                except: continue
+            
+            print(f"Page {page}: Added {count_on_page} new items.")
+            
+        except Exception as e:
+            print(f"Error on Page {page}: {e}")
 
-        print(f"성공적으로 {len(crawled_data)}개의 공고를 수집했습니다.")
-        return crawled_data
-    except Exception as e:
-        print(f"치명적 오류: {e}")
-        return []
+    print(f"Total collected: {len(all_crawled_data)}")
+    return all_crawled_data
 
 def save_to_js(data):
-    if not data: return
-    js_content = f"const supportPrograms = {json.dumps(data, ensure_ascii=False, indent=4)};"
-    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        f.write(js_content)
-    print(f"데이터 저장 완료: {OUTPUT_FILE}")
+    try:
+        content = f"const supportPrograms = {json.dumps(data, ensure_ascii=False, indent=4)};"
+        with open('scripts/data.js', 'w', encoding='utf-8') as f:
+            f.write(content)
+        print("Success: data.js updated.")
+    except Exception as e:
+        print(f"Fail: {e}")
 
 if __name__ == "__main__":
     data = fetch_data()
-    save_to_js(data)
+    if data:
+        save_to_js(data)
