@@ -9,25 +9,31 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSearch = '';
 
     // Initialize
-    renderCards(supportPrograms);
+    if (typeof supportPrograms !== 'undefined') {
+        renderCards(supportPrograms);
+    } else {
+        console.error("supportPrograms data not found. Please check data.js");
+        cardsGrid.innerHTML = `<div class="error-msg">데이터를 불러올 수 없습니다.</div>`;
+    }
 
     // Filter Buttons
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Update active state
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
-            // Apply filter
             currentFilter = btn.dataset.filter;
             filterAndRender();
         });
     });
 
-    // Search Input
+    // Search Input with debounce
+    let debounceTimer;
     searchInput.addEventListener('input', (e) => {
-        currentSearch = e.target.value.toLowerCase();
-        filterAndRender();
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            currentSearch = e.target.value.toLowerCase();
+            filterAndRender();
+        }, 150);
     });
 
     // Tag Clicks
@@ -37,6 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
             searchInput.value = keyword;
             currentSearch = keyword.toLowerCase();
             filterAndRender();
+            
+            // Scroll to results on mobile
+            if (window.innerWidth < 768) {
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+            }
         });
     });
 
@@ -45,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const matchFilter = currentFilter === 'all' || program.category === currentFilter;
             const matchSearch = program.title.toLowerCase().includes(currentSearch) ||
                 program.organization.toLowerCase().includes(currentSearch) ||
-                program.tags.some(tag => tag.toLowerCase().includes(currentSearch));
+                (program.tags && program.tags.some(tag => tag.toLowerCase().includes(currentSearch)));
             return matchFilter && matchSearch;
         });
 
@@ -54,12 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderCards(programs) {
         cardsGrid.innerHTML = '';
-        resultCount.textContent = `${programs.length}건`;
+        resultCount.textContent = programs.length;
 
         if (programs.length === 0) {
             cardsGrid.innerHTML = `
-                <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-secondary);">
-                    검색 결과가 없습니다.
+                <div style="grid-column: 1/-1; text-align: center; padding: 100px 20px; color: var(--text-low);">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 20px; opacity: 0.5;">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        <line x1="8" y1="11" x2="14" y2="11" stroke-linecap="round"></line>
+                    </svg>
+                    <p style="font-size: 1.1rem; font-weight: 600;">검색 결과가 없습니다.</p>
+                    <p style="font-size: 0.9rem; margin-top: 8px;">다른 키워드로 검색해 보세요.</p>
                 </div>
             `;
             return;
@@ -67,45 +84,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
         programs.forEach((program, index) => {
             const card = document.createElement('div');
-            card.className = 'card';
-            // Staggered delay for animation
-            card.style.animationDelay = `${index * 0.1}s`;
-            card.classList.add('fade-in-up');
+            card.className = 'card fade-in-up';
+            card.style.animationDelay = `${index * 0.05}s`;
 
-            // Determine badge label
+            // Badge Setup
             let badgeLabel = '';
             let badgeClass = '';
             switch (program.category) {
-                case 'support': badgeLabel = '지원사업'; badgeClass = 'badge-support'; break;
+                case 'support': badgeLabel = '지원금'; badgeClass = 'badge-support'; break;
                 case 'contest': badgeLabel = '공모전'; badgeClass = 'badge-contest'; break;
-                case 'loan': badgeLabel = '융자/보증'; badgeClass = 'badge-loan'; break;
+                case 'loan': badgeLabel = '금융지원'; badgeClass = 'badge-loan'; break;
+                default: badgeLabel = '기타'; badgeClass = '';
             }
 
             card.innerHTML = `
-                <span class="card-badge ${badgeClass}">${badgeLabel}</span>
-                <h3>${program.title}</h3>
-                <div class="card-info">
-                    <div class="info-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14"/></svg>
-                        ${program.organization}
-                    </div>
-                    <div class="info-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                        ~ ${program.deadline}
-                    </div>
-                    <div class="info-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                        ${program.views}회 조회
+                <div class="card-top">
+                    <span class="card-badge ${badgeClass}">${badgeLabel}</span>
+                    <div class="card-views">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        ${program.views || 0}
                     </div>
                 </div>
-                <div class="card-footer">
-                    <span class="d-day">${program.dDay}</span>
-                    <a href="${program.link}" target="_blank" class="details-link">
-                        자세히 보기
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </a>
+                <h3>${program.title}</h3>
+                <div class="card-org">
+                    <div class="org-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M5 21V7l8-4 8 4v14"/></svg>
+                    </div>
+                    ${program.organization}
+                </div>
+                <div class="card-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">마감일</span>
+                        <span class="meta-value">${program.deadline}</span>
+                    </div>
+                    <div class="meta-item d-day-wrap">
+                        <span class="d-day-pill">${program.dDay}</span>
+                    </div>
                 </div>
             `;
+
+            card.addEventListener('click', () => {
+                if (program.link) window.open(program.link, '_blank');
+            });
 
             cardsGrid.appendChild(card);
         });

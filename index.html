@@ -4,95 +4,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>비즈니스 지원 사업 알림이</title>
+    <title>BizSupport.kr | 프리미엄 비즈니스 지원 정보</title>
     <link rel="stylesheet" href="styles/main.css">
+    
+    <!-- Fonts: Outfit for Headings, Pretendard for Body -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#020617">
 </head>
 
 <body>
+    <!-- Premium Background Effects -->
+    <div class="mesh-gradient">
+        <div class="mesh-ball ball-1"></div>
+        <div class="mesh-ball ball-2"></div>
+        <div class="mesh-ball ball-3"></div>
+    </div>
+
     <header class="glass-header">
         <div class="container header-content">
-            <div class="logo">BizSupport<span class="highlight">.kr</span></div>
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                BizSupport<span class="highlight">.kr</span>
+            </div>
             <nav class="desktop-nav">
                 <ul>
-                    <li><a href="#" class="active">홈</a></li>
-                    <li><a href="#featured">주요 공고</a></li>
-                    <li><a href="settings.html">설정</a></li>
+                    <li><a href="index.html" class="active">홈</a></li>
+                    <li><a href="#results">지원사업</a></li>
+                    <li><a href="settings.html">나의 맞춤설정</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main style="padding-bottom: 80px;"> <!-- Add padding for bottom nav -->
+    <main>
         <section class="hero-section">
-            <div class="container hero-content">
-                <h1>당신의 비즈니스를 위한<br><span class="gradient-text">최적의 지원 사업</span>을 찾아보세요</h1>
-                <p class="hero-subtitle">정부 지원금, 창업 경진대회, R&D 과제까지 한눈에 확인하세요.</p>
+            <div class="container">
+                <div class="hero-badge">
+                    <span></span> 실시간 창업지원 정보 업데이트 중
+                </div>
+                <h1>성장을 위한 가장 <br><span class="gradient-text">확실한 가이드</span></h1>
+                <p class="hero-subtitle">BizSupport는 인공지능 크롤러를 통해 전국 모든 부처의 창업 지원금과 R&D 과제를 가장 빠르게 전달합니다.</p>
 
                 <div class="search-container">
                     <div class="input-wrapper">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <input type="text" id="searchInput" placeholder="관심 분야나 키워드를 검색해보세요 (예: 마케팅, AI, 청년창업)">
+                        <input type="text" id="searchInput" placeholder="키워드로 검색 (예: 초기창업, 마케팅, AI바우처)">
                     </div>
                 </div>
 
                 <div class="tags-container">
                     <span class="tag">#초기창업</span>
                     <span class="tag">#R&D</span>
-                    <span class="tag">#소상공인</span>
-                    <span class="tag">#AI</span>
-                    <span class="tag">#수출지원</span>
+                    <span class="tag">#예비창업패키지</span>
+                    <span class="tag">#해외진출</span>
+                    <span class="tag">#데이터바우처</span>
                 </div>
             </div>
         </section>
 
-        <section id="results" class="results-section container">
-            <div class="section-header">
-                <h2>지원 사업 목록 <span class="count" id="resultCount">0건</span></h2>
-                <div class="filters">
-                    <button class="filter-btn active" data-filter="all">전체</button>
-                    <button class="filter-btn" data-filter="support">지원금</button>
-                    <button class="filter-btn" data-filter="contest">공모전</button>
-                    <button class="filter-btn" data-filter="loan">융자/보증</button>
+        <section id="results" class="results-section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h2>최신 공고 목록 <span class="count" id="resultCount">0</span></h2>
+                    </div>
+                    <div class="filters">
+                        <button class="filter-btn active" data-filter="all">전체</button>
+                        <button class="filter-btn" data-filter="support">지원금</button>
+                        <button class="filter-btn" data-filter="contest">공모전</button>
+                        <button class="filter-btn" data-filter="loan">금융지원</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="cards-grid" id="cardsGrid">
-                <!-- Cards will be injected here by JS -->
+                <div class="cards-grid" id="cardsGrid">
+                    <!-- Cards will be injected by app.js -->
+                </div>
             </div>
         </section>
     </main>
 
+    <footer>
+        <div class="container footer-content">
+            <div class="logo footer-logo">
+                BizSupport.kr
+            </div>
+            <ul class="footer-links">
+                <li><a href="#">이용약관</a></li>
+                <li><a href="#">개인정보처리방침</a></li>
+                <li><a href="#">공고문의</a></li>
+            </ul>
+            <p class="copyright">&copy; 2026 BizSupport. All rights reserved.</p>
+        </div>
+    </footer>
+
     <!-- Bottom Navigation for Mobile -->
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item active">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
             <span>홈</span>
         </a>
         <a href="#results" class="nav-item">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
             <span>검색</span>
         </a>
         <a href="settings.html" class="nav-item">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <circle cx="12" cy="12" r="3"></circle>
-                <path
-                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                </path>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
             <span>설정</span>
         </a>
@@ -100,13 +136,6 @@
 
     <script src="scripts/data.js"></script>
     <script src="scripts/app.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js');
-            });
-        }
-    </script>
 </body>
 
 </html>

@@ -4,87 +4,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>설정 - BizSupport</title>
+    <title>나의 맞춤설정 | BizSupport.kr</title>
     <link rel="stylesheet" href="styles/main.css">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#020617">
 </head>
 
 <body>
+    <!-- Premium Background Effects -->
+    <div class="mesh-gradient">
+        <div class="mesh-ball ball-1"></div>
+        <div class="mesh-ball ball-2"></div>
+    </div>
+
     <header class="glass-header">
         <div class="container header-content">
-            <div class="logo">설정</div>
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                BizSupport<span class="highlight">.kr</span>
+            </div>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="index.html">홈</a></li>
+                    <li><a href="index.html#results">지원사업</a></li>
+                    <li><a href="settings.html" class="active">나의 맞춤설정</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <main class="container" style="padding-top: 100px; padding-bottom: 100px;">
-        <h2 style="margin-bottom: 20px;">알림 설정</h2>
+    <main class="container" style="padding-top: 140px; padding-bottom: 120px; max-width: 800px;">
+        <div class="section-title" style="margin-bottom: 32px;">
+            <h1 style="font-size: 2.5rem; margin-bottom: 8px;">맞춤 알림 설정</h1>
+            <p style="color: var(--text-med);">나에게 꼭 필요한 공고만 골라서 알려드릴게요.</p>
+        </div>
 
-        <div class="card" style="margin-bottom: 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="margin: 0;">푸시 알림 받기</h3>
+        <div class="card fade-in-up" style="margin-bottom: 32px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="margin: 0; font-family: var(--font-heading);">실시간 푸시 알림</h3>
                 <label class="switch">
                     <input type="checkbox" id="pushToggle" checked>
                     <span class="slider round"></span>
                 </label>
             </div>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                관심 분야의 새로운 지원 사업이 등록되면 알림을 받습니다.
+            <p style="color: var(--text-med); font-size: 0.95rem; line-height: 1.6;">
+                관심 키워드가 포함된 새로운 지원 사업이 등록되면 브라우저 알림을 통해 즉시 알려드립니다.
             </p>
         </div>
 
-        <h2 style="margin-bottom: 20px;">관심 키워드</h2>
-        <div class="card">
-            <div class="input-wrapper" style="margin-bottom: 20px;">
-                <input type="text" id="keywordInput" placeholder="키워드 추가 (예: AI, 청년)">
-                <button id="addKeywordBtn"
-                    style="background: var(--accent-color); border: none; color: white; padding: 0 20px; border-radius: 20px; cursor: pointer;">추가</button>
+        <div class="section-title" style="margin-bottom: 24px;">
+            <h2 style="font-size: 1.5rem;">관심 키워드 관리</h2>
+        </div>
+        
+        <div class="card fade-in-up" style="animation-delay: 0.1s;">
+            <div class="input-wrapper" style="margin-bottom: 24px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 12px;">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <input type="text" id="keywordInput" placeholder="키워드 추가 (예: AI, 청년창업, 바우처)">
+                <button id="addKeywordBtn" style="background: var(--accent-primary); border: none; color: var(--bg-dark); padding: 8px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; margin-left: 12px; transition: transform 0.2s;">추가</button>
             </div>
 
-            <div class="tags-container" id="keywordList" style="justify-content: flex-start;">
+            <div class="tags-container" id="keywordList" style="justify-content: flex-start; gap: 10px;">
                 <!-- Keywords will be added here -->
             </div>
+            
+            <div id="emptyKeywords" style="text-align: center; padding: 40px 0; color: var(--text-low); display: none;">
+                등록된 키워드가 없습니다.
+            </div>
         </div>
-
     </main>
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
             <span>홈</span>
         </a>
         <a href="index.html#results" class="nav-item">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
             <span>검색</span>
         </a>
         <a href="settings.html" class="nav-item active">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <circle cx="12" cy="12" r="3"></circle>
-                <path
-                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                </path>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
             <span>설정</span>
         </a>
     </nav>
 
     <style>
-        /* Switch Toggle Style */
+        /* Custom Switch */
         .switch {
             position: relative;
             display: inline-block;
-            width: 50px;
-            height: 28px;
+            width: 48px;
+            height: 24px;
         }
 
         .switch input {
@@ -101,26 +133,30 @@
             right: 0;
             bottom: 0;
             background-color: rgba(255, 255, 255, 0.1);
-            transition: .4s;
+            transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--glass-border);
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 20px;
-            width: 20px;
-            left: 4px;
-            bottom: 4px;
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
             background-color: white;
-            transition: .4s;
+            transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         input:checked+.slider {
-            background-color: var(--accent-color);
+            background-color: var(--accent-primary);
+            border-color: var(--accent-primary);
         }
 
         input:checked+.slider:before {
-            transform: translateX(22px);
+            transform: translateX(24px);
+            background-color: var(--bg-dark);
         }
 
         .slider.round {
@@ -129,6 +165,10 @@
 
         .slider.round:before {
             border-radius: 50%;
+        }
+
+        #addKeywordBtn:active {
+            transform: scale(0.95);
         }
     </style>
     <script src="scripts/settings.js"></script>
