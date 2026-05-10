@@ -11,7 +11,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "2",
@@ -25,7 +25,7 @@ const supportPrograms = [
             "#글로벌",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "3",
@@ -39,7 +39,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "4",
@@ -53,7 +53,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "5",
@@ -67,7 +67,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "6",
@@ -81,7 +81,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "7",
@@ -95,7 +95,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "8",
@@ -109,7 +109,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "9",
@@ -123,7 +123,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "10",
@@ -137,7 +137,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "11",
@@ -151,7 +151,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "12",
@@ -165,7 +165,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "13",
@@ -179,7 +179,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "14",
@@ -193,7 +193,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "15",
@@ -207,7 +207,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "16",
@@ -221,7 +221,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "17",
@@ -235,7 +235,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "18",
@@ -249,7 +249,7 @@ const supportPrograms = [
             "#지원사업",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     },
     {
         "id": "19",
@@ -263,6 +263,6 @@ const supportPrograms = [
             "#인력",
             "#기관 정보"
         ],
-        "link": "https://www.k-startup.go.kr/"
+        "link": "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
     }
 ];

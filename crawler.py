@@ -63,13 +63,15 @@ def fetch_data():
                 link_el = item.find_parent('a') or item.select_one('a')
                 if not link_el and item.parent: link_el = item.parent.select_one('a')
                 
-                pbanc_id = ""
-                detail_url = "https://www.k-startup.go.kr/"
+                pbanc_sn = ""
+                detail_url = "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do"
                 if link_el and 'href' in link_el.attrs:
-                    id_match = re.search(r"go_view\('([^']+)'\)", link_el['href'])
+                    # javascript:go_view('177550') 형태에서 숫자 ID 추출
+                    id_match = re.search(r"go_view\('(\d+)'\)", link_el['href'])
                     if id_match:
-                        pbanc_id = id_match.group(1)
-                        detail_url = f"https://www.k-startup.go.kr/web/contents/bizpbanc-view.do?pbancId={pbanc_id}"
+                        pbanc_sn = id_match.group(1)
+                        # 요청하신 상세 페이지 형식 적용
+                        detail_url = f"https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?pbancClssCd=PBC010&schM=view&pbancSn={pbanc_sn}"
 
                 # 3. 카테고리 및 D-Day (상단 배지 영역)
                 # .slide 내부에서는 .ann_top 아래에 위치함
@@ -109,7 +111,7 @@ def fetch_data():
                     d_day = calculate_dday(deadline_date)
 
                 crawled_data.append({
-                    "id": pbanc_id or str(len(crawled_data) + 1),
+                    "id": pbanc_sn or str(len(crawled_data) + 1),
                     "title": title,
                     "organization": organization,
                     "category": map_category(category_text),
