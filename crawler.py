@@ -34,22 +34,27 @@ def fetch_data():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     }
 
-    # 1페이지부터 5페이지까지 수집 (약 100개 공고)
-    for page in range(1, 6):
+    # 모집 중인 모든 페이지 전수 조사 (데이터가 없을 때까지 무한 루프)
+    page = 1
+    while True:
         url = f"{TARGET_URL}?page={page}"
         print(f"Reading Page {page}...")
         
         try:
+            # 서버 부하 방지 및 차단 예방을 위해 살짝 대기
+            import time
+            time.sleep(0.5)
+            
             response = requests.get(url, headers=headers, timeout=15)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            # K-Startup 리스트 구조: .board_list-wrap 내의 li 또는 .biz_list > li
+            # K-Startup 리스트 구조 선택자
             items = soup.select('.board_list-wrap > ul > li') or soup.select('.biz_list > li') or soup.select('.list_type01 > li')
             
-            # 만약 위 선택자로 안 잡히면 더 넓은 범위로 탐색
             if not items:
-                items = soup.find_all('li', class_=re.compile(r'board|list'))
+                print(f"No more items found on Page {page}. Full collection complete.")
+                break
 
             count_on_page = 0
             for item in items:
@@ -57,10 +62,8 @@ def fetch_data():
                 if not title_el: continue
                 
                 title = title_el.text.strip()
-                # 중복 제거 (이미 수집한 제목이면 스킵)
                 if title in seen_titles: continue
                 
-                # 상세 데이터 추출 시작
                 try:
                     link_el = item.select_one('a')
                     pbanc_sn = ""
@@ -128,8 +131,15 @@ def fetch_data():
             
             print(f"Page {page}: Added {count_on_page} new items.")
             
+            # 페이지당 아이템이 15개 미만이면 다음 페이지가 없을 가능성이 큼 (K-Startup 특성)
+            if count_on_page == 0:
+                break
+                
+            page += 1
+            
         except Exception as e:
             print(f"Error on Page {page}: {e}")
+            break
 
     print(f"Total collected: {len(all_crawled_data)}")
     return all_crawled_data
