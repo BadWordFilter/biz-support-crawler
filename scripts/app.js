@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             searchInput.value = keyword;
             currentSearch = keyword.toLowerCase();
             filterAndRender();
-            
+
             // Scroll to results on mobile
             if (window.innerWidth < 768) {
                 document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
@@ -83,6 +83,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         programs.forEach((program, index) => {
+            // Inject In-feed Ad every 8 cards
+            if (index > 0 && index % 8 === 0) {
+                const adContainer = document.createElement('div');
+                adContainer.className = 'adsense-container ad-infeed fade-in-up';
+                adContainer.innerHTML = `
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-format="fluid"
+                         data-ad-layout-key="-fb+5w+4e-db+86"
+                         data-ad-client="ca-pub-4540972419156905"
+                         data-ad-slot="##########"></ins>
+                    <span class="ad-placeholder-text">In-feed Ad Unit</span>
+                `;
+                cardsGrid.appendChild(adContainer);
+                
+                // Initialize the injected ad
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                } catch (e) {
+                    console.log("AdSense push error:", e);
+                }
+            }
+
             const card = document.createElement('div');
             card.className = 'card fade-in-up';
             card.style.animationDelay = `${index * 0.05}s`;
