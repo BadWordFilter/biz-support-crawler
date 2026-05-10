@@ -29,7 +29,10 @@
     /* AdSense specific */
     --ad-bg: rgba(255, 255, 255, 0.02);
     --ad-border: rgba(255, 255, 255, 0.05);
+    
+    --sidebar-width: 180px;
 }
+
 
 @keyframes float {
     0% {
@@ -149,6 +152,40 @@ body::before {
     left: 30%;
     opacity: 0.2;
     animation-delay: -10s;
+}
+
+/* --- Layout System --- */
+.main-layout {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 0 20px;
+    margin: 100px auto 0;
+    max-width: 1800px;
+}
+
+.ad-sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+}
+
+.ad-skyscraper {
+    width: 160px;
+    height: 600px;
+    position: sticky;
+    top: 120px;
+}
+
+.content-area {
+    flex: 1;
+    max-width: 1200px;
+    min-width: 0;
+}
+
+@media (max-width: 1400px) {
+    .ad-sidebar {
+        display: none;
+    }
 }
 
 .container {
@@ -729,6 +766,88 @@ footer {
     .filter-btn {
         flex-shrink: 0;
     }
+}
+
+/* --- Filter Panel --- */
+.filters-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.advanced-filter-toggle {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.advanced-filter-toggle:hover {
+    background: var(--glass-hover);
+    border-color: var(--primary);
+}
+
+.filter-panel {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    margin-bottom: 30px;
+    display: none; /* Toggle via JS */
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+}
+
+.filter-group h3 {
+    font-size: 0.9rem;
+    color: var(--text-low);
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-opt {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-opt:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.filter-opt.active {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
 }
 
 /* --- AdSense Containers --- */

@@ -81,57 +81,76 @@ def fetch_data():
                             pbanc_sn = sn_match.group(1)
                             detail_url = f"https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?pbancClssCd=PBC010&schM=view&pbancSn={pbanc_sn}"
 
-                # 3. 카테고리 및 D-Day (상단 배지 영역)
-                # .slide 내부에서는 .ann_top 아래에 위치함
-                top_el = item.find_previous_sibling('.ann_top') or item.select_one('.ann_top')
-                if not top_el and item.parent: top_el = item.parent.select_one('.ann_top')
-                
+                # 3. 상세 메타데이터 추출 (확장)
                 category_text = "지원사업"
-                d_day = "상시"
-                deadline_date = "상시모집"
+                agency_type = "공공" # 기본값
+                region = "전국"
+                target_audience = "일반인"
+                startup_term = "전체"
                 
-                if top_el:
-                    cat_el = top_el.select_one('.flag.type07') or top_el.select_one('.badge')
-                    if cat_el: category_text = cat_el.text.strip()
-                    
-                    dday_el = top_el.select_one('.flag.day') or top_el.select_one('.dday')
-                    if dday_el: d_day = dday_el.text.strip()
-                    
-                    date_el = top_el.select_one('.txt')
-                    if date_el:
-                        date_match = re.search(r'\d{4}-\d{2}-\d{2}', date_el.text) or re.search(r'\d{4}\.\d{2}\.\d{2}', date_el.text)
-                        if date_match: deadline_date = date_match.group(0).replace('-', '.')
+                # 카테고리 (flag)
+                cat_el = item.select_one('.flag.type07') or item.select_one('.badge')
+                if cat_el: category_text = cat_el.text.strip()
+                
+                # 기관구분 (flag_agency)
+                agency_el = item.select_one('.flag_agency')
+                if agency_el: agency_type = agency_el.text.strip()
+                
+                # 제목에서 지역/업력 유추 (고급 필터용)
+                regions = ["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"]
+                for r in regions:
+                    if r in title:
+                        region = r
+                        break
+                
+                if "예비" in title: startup_term = "예비창업자"
+                elif "7년" in title: startup_term = "7년미만"
+                elif "3년" in title: startup_term = "3년미만"
+                elif "1년" in title: startup_term = "1년미만"
 
                 # 4. 기관명 및 조회수
-                info_list = item.select('.info li') or item.select('ul.info li')
+                info_list = item.select('.info li') or item.select('ul.info li') or item.select('.bottom .list')
                 info_texts = [li.text.strip() for li in info_list]
                 
                 organization = "기관 정보 없음"
                 views_count = 0
-                if len(info_texts) >= 1:
-                    # '기관명 : OOO' 형태 또는 그냥 'OOO'
-                    org_text = info_texts[0]
-                    organization = org_text.split(':')[-1].strip() if ':' in org_text else org_text
-                
-                if len(info_texts) >= 2:
-                    views_match = re.search(r'(\d+)', info_texts[-1])
-                    if views_match: views_count = int(views_match.group(1))
+                for info in info_texts:
+                    if "조회" in info:
+                        v_match = re.search(r'(\d+)', info)
+                        if v_match: views_count = int(v_match.group(1).replace(',', ''))
+                    elif "일자" not in info and ":" not in info and len(info) < 20:
+                        organization = info.strip()
+                    elif ":" in info:
+                        parts = info.split(':')
+                        if "기관" in parts[0] or "부서" in parts[0]:
+                            organization = parts[1].strip()
 
-                # D-Day 재계산 (날짜가 있는 경우 정확하게)
-                if deadline_date and deadline_date != "상시모집":
-                    d_day = calculate_dday(deadline_date)
+                # D-Day 및 날짜
+                deadline_date = "상시모집"
+                d_day = "상시"
+                date_texts = [t for t in info_texts if "마감일자" in t]
+                if date_texts:
+                    d_match = re.search(r'\d{4}-\d{2}-\d{2}', date_texts[0])
+                    if d_match:
+                        deadline_date = d_match.group(0).replace('-', '.')
+                        d_day = calculate_dday(deadline_date)
 
                 crawled_data.append({
                     "id": pbanc_sn or str(len(crawled_data) + 1),
                     "title": title,
                     "organization": organization,
                     "category": map_category(category_text),
+                    "agencyType": agency_type,
+                    "region": region,
+                    "target": target_audience,
+                    "startupTerm": startup_term,
                     "deadline": deadline_date,
                     "dDay": d_day,
                     "views": views_count,
-                    "tags": [f"#{category_text}", f"#{organization[:6].strip()}"],
+                    "tags": [f"#{category_text}", f"#{region}", f"#{agency_type}"],
                     "link": detail_url
                 })
+
             except: continue
 
         print(f"성공적으로 {len(crawled_data)}개의 공고를 수집했습니다.")

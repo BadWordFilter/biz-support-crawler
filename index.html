@@ -51,8 +51,23 @@
         </div>
     </header>
 
-    <main>
-        <section class="hero-section">
+    <main class="main-layout">
+        <!-- Left Sidebar Ad -->
+        <aside class="ad-sidebar side-left">
+            <div class="adsense-container ad-skyscraper">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4540972419156905"
+                     data-ad-slot="##########"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <span class="ad-placeholder-text">Side Ad (L)</span>
+            </div>
+        </aside>
+
+        <section class="content-area">
+            <section class="hero-section">
+
             <div class="container">
                 <div class="hero-badge">
                     <span></span> 실시간 창업지원 정보 업데이트 중
@@ -94,12 +109,52 @@
                     <div class="section-title">
                         <h2>최신 공고 목록 <span class="count" id="resultCount">0</span></h2>
                     </div>
-                    <div class="filters">
-                        <button class="filter-btn active" data-filter="all">전체</button>
-                        <button class="filter-btn" data-filter="support">지원금</button>
-                        <button class="filter-btn" data-filter="contest">공모전</button>
-                        <button class="filter-btn" data-filter="loan">금융지원</button>
+                    <div class="filters-wrapper">
+                        <div class="filters">
+                            <button class="filter-btn active" data-filter="all">전체</button>
+                            <button class="filter-btn" data-filter="support">지원금</button>
+                            <button class="filter-btn" data-filter="contest">공모전</button>
+                            <button class="filter-btn" data-filter="loan">금융지원</button>
+                        </div>
+                        <button class="advanced-filter-toggle" id="filterToggle">
+                            <i class="xi-filter"></i> 상세 필터
+                        </button>
                     </div>
+
+                    <!-- Advanced Filter Panel -->
+                    <div class="filter-panel" id="filterPanel">
+                        <div class="filter-grid">
+                            <div class="filter-group">
+                                <h3>지역</h3>
+                                <div class="filter-options" id="filter-region">
+                                    <button class="filter-opt active" data-value="all">전국</button>
+                                    <button class="filter-opt" data-value="서울">서울</button>
+                                    <button class="filter-opt" data-value="경기">경기</button>
+                                    <button class="filter-opt" data-value="부산">부산</button>
+                                    <button class="filter-opt" data-value="대전">대전</button>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <h3>기관구분</h3>
+                                <div class="filter-options" id="filter-agency">
+                                    <button class="filter-opt active" data-value="all">전체</button>
+                                    <button class="filter-opt" data-value="공공">공공</button>
+                                    <button class="filter-opt" data-value="민간">민간</button>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <h3>창업업력</h3>
+                                <div class="filter-options" id="filter-term">
+                                    <button class="filter-opt active" data-value="all">전체</button>
+                                    <button class="filter-opt" data-value="예비창업자">예비창업자</button>
+                                    <button class="filter-opt" data-value="1년미만">1년미만</button>
+                                    <button class="filter-opt" data-value="3년미만">3년미만</button>
+                                    <button class="filter-opt" data-value="7년미만">7년미만</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="cards-grid" id="cardsGrid">
@@ -108,12 +163,29 @@
 
                 <!-- Footer AdSense Slot -->
                 <div class="adsense-container ad-footer">
-                    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4540972419156905"
-                        data-ad-slot="##########" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-4540972419156905"
+                         data-ad-slot="##########"
+                         data-ad-format="horizontal"
+                         data-full-width-responsive="true"></ins>
                     <span class="ad-placeholder-text">Banner Ad Placement Area</span>
                 </div>
             </div>
         </section>
+
+        <!-- Right Sidebar Ad -->
+        <aside class="ad-sidebar side-right">
+            <div class="adsense-container ad-skyscraper">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4540972419156905"
+                     data-ad-slot="##########"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <span class="ad-placeholder-text">Side Ad (R)</span>
+            </div>
+        </aside>
     </main>
 
     <footer>
