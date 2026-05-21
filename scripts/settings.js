@@ -1,25 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Basic Settings
+    // ── DOM References ──
     const keywordInput = document.getElementById('keywordInput');
     const addBtn = document.getElementById('addKeywordBtn');
     const keywordList = document.getElementById('keywordList');
     const pushToggle = document.getElementById('pushToggle');
 
-    // Profile Settings
     const profileName = document.getElementById('profileName');
     const profileRegion = document.getElementById('profileRegion');
     const saveProfileBtn = document.getElementById('saveProfileBtn');
     const testPushBtn = document.getElementById('testPushBtn');
     const toastPopup = document.getElementById('toastPopup');
 
-    const termButtons = document.querySelectorAll('#profileTermGroup .chip-btn');
-    const categoryButtons = document.querySelectorAll('#profileCategoryGroup .chip-btn');
+    const termButtons = document.querySelectorAll('#profileTermGroup .chip');
+    const categoryButtons = document.querySelectorAll('#profileCategoryGroup .chip');
 
-    // Load saved settings
+    // ── Load Saved Data ──
     const savedKeywords = JSON.parse(localStorage.getItem('bizSupport_keywords')) || ['청년창업', 'R&D'];
-    const savedPush = localStorage.getItem('bizSupport_push') !== 'false'; // Default true
-    
-    // Load profile
+    const savedPush = localStorage.getItem('bizSupport_push') !== 'false';
+
     const defaultProfile = {
         name: '',
         term: 'all',
@@ -28,34 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const savedProfile = JSON.parse(localStorage.getItem('bizSupport_profile')) || defaultProfile;
 
-    // Apply values to inputs
+    // ── Apply Saved Values ──
     pushToggle.checked = savedPush;
-    renderKeywords();
-
     profileName.value = savedProfile.name || '';
     profileRegion.value = savedProfile.region || 'all';
 
-    // Highlight active profile term chip
     termButtons.forEach(btn => {
-        if (btn.dataset.value === savedProfile.term) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
+        btn.classList.toggle('active', btn.dataset.value === savedProfile.term);
     });
 
-    // Highlight active profile category chips
     categoryButtons.forEach(btn => {
-        if (savedProfile.categories.includes(btn.dataset.value)) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
+        btn.classList.toggle('active', savedProfile.categories.includes(btn.dataset.value));
     });
 
-    // --- Interactive Chip Event Handlers ---
-    
-    // Startup Term Group (Single select)
+    renderKeywords();
+
+    // ── Chip Interactions ──
+    // Startup term (single select)
     termButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             termButtons.forEach(b => b.classList.remove('active'));
@@ -63,11 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Category Group (Multi select)
+    // Category (multi select)
     categoryButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            const activeCats = document.querySelectorAll('#profileCategoryGroup .chip-btn.active');
-            // Allow toggling, but prevent having 0 selected categories
+            const activeCats = document.querySelectorAll('#profileCategoryGroup .chip.active');
             if (btn.classList.contains('active') && activeCats.length <= 1) {
                 showToast('최소 하나의 관심 분야를 선택해야 합니다.');
                 return;
@@ -76,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Event Listeners ---
+    // ── Event Listeners ──
     addBtn.addEventListener('click', addKeyword);
     keywordInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') addKeyword();
@@ -94,11 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const activeTermBtn = document.querySelector('#profileTermGroup .chip-btn.active');
+        const activeTermBtn = document.querySelector('#profileTermGroup .chip.active');
         const termVal = activeTermBtn ? activeTermBtn.dataset.value : 'all';
         const regionVal = profileRegion.value;
-
-        const activeCategoryBtns = document.querySelectorAll('#profileCategoryGroup .chip-btn.active');
+        const activeCategoryBtns = document.querySelectorAll('#profileCategoryGroup .chip.active');
         const categoriesVal = Array.from(activeCategoryBtns).map(btn => btn.dataset.value);
 
         const profileData = {
@@ -109,21 +94,16 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         localStorage.setItem('bizSupport_profile', JSON.stringify(profileData));
-        showToast('맞춤 프로필이 성공적으로 저장되었습니다!');
+        showToast('맞춤 프로필이 저장되었습니다!');
     });
 
-    testPushBtn.addEventListener('click', () => {
-        triggerDemoNotification();
-    });
+    testPushBtn.addEventListener('click', triggerDemoNotification);
 
-    // --- Helper Functions ---
-
+    // ── Helper Functions ──
     function showToast(message) {
         toastPopup.textContent = message;
         toastPopup.classList.add('show');
-        setTimeout(() => {
-            toastPopup.classList.remove('show');
-        }, 2500);
+        setTimeout(() => toastPopup.classList.remove('show'), 2800);
     }
 
     function addKeyword() {
@@ -154,8 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
             tag.style.alignItems = 'center';
             tag.style.gap = '8px';
             tag.innerHTML = `
-                #${keyword} 
-                <span style="font-size: 1.2em; line-height: 0.5;">&times;</span>
+                #${keyword}
+                <span style="font-size: 1.2em; line-height: 0.5; cursor: pointer;">&times;</span>
             `;
             tag.onclick = () => removeKeyword(keyword);
             keywordList.appendChild(tag);
@@ -177,21 +157,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (permission === 'granted') {
                     sendNotification(nameVal);
                 } else {
-                    showToast('알림 권한이 차단되었습니다. 설정에서 권한을 변경해 주세요.');
+                    showToast('알림 권한이 차단되었습니다. 브라우저 설정에서 변경해 주세요.');
                 }
             });
         } else {
-            showToast('브라우저 설정에서 알림 허용 권한이 거부되어 있습니다.');
+            showToast('브라우저에서 알림 권한이 거부되어 있습니다.');
         }
     }
 
     function sendNotification(userName) {
-        const title = '🔔 BizSupport 맞춤 추천 공고';
-        const options = {
-            body: `안녕하세요 ${userName}님! 새로운 R&D 지원사업 공고가 등록되었습니다. 지금 바로 확인해 보세요!`,
-            icon: 'manifest.json' // Path to notification icon
-        };
-        new Notification(title, options);
-        showToast('테스트 알림이 성공적으로 전송되었습니다.');
+        new Notification('BizSupport 맞춤 추천 공고', {
+            body: `${userName}님, 새로운 R&D 지원사업 공고가 등록되었습니다. 지금 확인해 보세요!`
+        });
+        showToast('테스트 알림이 전송되었습니다.');
     }
 });

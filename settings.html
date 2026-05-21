@@ -20,36 +20,32 @@
     <meta name="google-adsense-account" content="ca-pub-4540972419156905">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4540972419156905" crossorigin="anonymous"></script>
     <style>
-        /* Custom Toggle Switch */
+        /* ── Settings Page Specific ── */
+
+        /* Toggle Switch */
         .switch {
             position: relative;
             display: inline-block;
             width: 48px;
             height: 24px;
+            flex-shrink: 0;
         }
-
         .switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-
         .slider {
             position: absolute;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(255, 255, 255, 0.1);
             transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid var(--glass-border);
             border-radius: 34px;
         }
-
         .slider .knob {
             position: absolute;
-            content: "";
             height: 16px;
             width: 16px;
             left: 3px;
@@ -59,19 +55,302 @@
             transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
-
         input:checked + .slider {
             background-color: var(--accent-primary);
             border-color: var(--accent-primary);
         }
-
         input:checked + .slider .knob {
             transform: translateX(24px);
             background-color: var(--bg-dark, #020617);
         }
 
-        #addKeywordBtn:active {
-            transform: scale(0.95);
+        /* Settings Layout */
+        .settings-main {
+            padding-top: 130px;
+            padding-bottom: 120px;
+            max-width: 720px;
+            position: relative;
+            z-index: 2;
+        }
+        .settings-hero {
+            margin-bottom: 40px;
+        }
+        .settings-hero h1 {
+            font-size: 2.2rem;
+            margin: 0 0 6px 0;
+            font-family: var(--font-heading);
+            background: linear-gradient(135deg, #f8fafc, var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .settings-hero p {
+            color: var(--text-med);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Section Cards */
+        .settings-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(12px);
+            position: relative;
+            z-index: 3;
+        }
+        .settings-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .settings-card-header-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .settings-card-header h2 {
+            font-size: 1.2rem;
+            margin: 0;
+            font-family: var(--font-heading);
+            color: white;
+        }
+        .settings-card-header p {
+            font-size: 0.85rem;
+            color: var(--text-low);
+            margin: 2px 0 0 0;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 22px;
+        }
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-med);
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: #f8fafc;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 5;
+        }
+        .form-input::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+        .form-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+        }
+        .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: #f8fafc;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            position: relative;
+            z-index: 5;
+        }
+        .form-select:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+        }
+
+        /* Chips */
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .chip {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            padding: 10px 18px;
+            border-radius: 24px;
+            color: var(--text-med);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: inherit;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .chip:hover {
+            border-color: var(--accent-primary);
+            color: white;
+            background: rgba(34, 211, 238, 0.08);
+        }
+        .chip.active {
+            background: linear-gradient(135deg, var(--accent-primary), var(--primary));
+            border-color: transparent;
+            color: var(--bg-dark);
+            font-weight: 700;
+            box-shadow: 0 2px 12px rgba(34, 211, 238, 0.25);
+        }
+
+        /* Save Button */
+        .save-btn {
+            width: 100%;
+            margin-top: 8px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--primary));
+            border: none;
+            color: var(--bg-dark);
+            padding: 16px 20px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: transform 0.15s, box-shadow 0.15s;
+            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.2);
+            position: relative;
+            z-index: 5;
+        }
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(34, 211, 238, 0.3);
+        }
+        .save-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Notification Row */
+        .notif-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .notif-row-info {
+            flex: 1;
+        }
+        .notif-row-info h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-family: var(--font-heading);
+            color: white;
+        }
+        .notif-row-info p {
+            margin: 4px 0 0 0;
+            color: var(--text-low);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Test Button */
+        .test-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            color: var(--text-med);
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .test-btn:hover {
+            border-color: var(--accent-primary);
+            color: white;
+            background: rgba(34, 211, 238, 0.08);
+        }
+        .test-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Keyword Section */
+        .keyword-add-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .keyword-add-row .form-input {
+            flex: 1;
+        }
+        .keyword-add-btn {
+            padding: 14px 22px;
+            background: var(--accent-primary);
+            border: none;
+            border-radius: 12px;
+            color: var(--bg-dark);
+            font-weight: 700;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.15s;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 5;
+        }
+        .keyword-add-btn:hover {
+            transform: translateY(-1px);
+        }
+        .keyword-add-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Divider */
+        .settings-divider {
+            border: none;
+            height: 1px;
+            background: var(--glass-border);
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .settings-main {
+                padding-top: 110px;
+            }
+            .settings-hero h1 {
+                font-size: 1.7rem;
+            }
+            .settings-card {
+                padding: 20px;
+            }
+            .chip {
+                padding: 8px 14px;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -103,94 +382,146 @@
         </div>
     </header>
 
-    <main class="container" style="padding-top: 140px; padding-bottom: 120px; max-width: 800px;">
-        <div class="section-title" style="margin-bottom: 32px;">
-            <h1 style="font-size: 2.5rem; margin-bottom: 8px;">맞춤 알림 설정</h1>
-            <p style="color: var(--text-med);">나에게 꼭 필요한 공고만 골라서 알려드릴게요.</p>
+    <main class="container settings-main">
+        <!-- Page Hero -->
+        <div class="settings-hero">
+            <h1>나의 맞춤설정</h1>
+            <p>프로필을 설정하면 나에게 꼭 맞는 지원사업만 추천해 드려요.</p>
         </div>
 
-        <div class="section-title" style="margin-bottom: 24px;">
-            <h2 style="font-size: 1.5rem;">나의 추천 프로필</h2>
-        </div>
-
-        <div class="card fade-in-up" style="margin-bottom: 32px; animation-delay: 0.05s;">
-            <div class="profile-form-group">
-                <label for="profileName">이름</label>
-                <input type="text" id="profileName" class="profile-input-text" placeholder="이름을 입력해주세요 (예: 홍길동)">
-            </div>
-            
-            <div class="profile-form-group">
-                <label>창업단계 / 직업</label>
-                <div class="chip-group" id="profileTermGroup">
-                    <button class="chip-btn active" data-value="all">전체</button>
-                    <button class="chip-btn" data-value="예비창업자">예비창업자</button>
-                    <button class="chip-btn" data-value="1년미만">1년 미만</button>
-                    <button class="chip-btn" data-value="3년미만">3년 미만</button>
-                    <button class="chip-btn" data-value="7년미만">7년 미만</button>
+        <!-- 1. Profile Card -->
+        <div class="settings-card fade-in-up">
+            <div class="settings-card-header">
+                <div class="settings-card-header-icon" style="background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(139, 92, 246, 0.2));">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div>
+                    <h2>나의 추천 프로필</h2>
+                    <p>이 정보를 기반으로 맞춤 공고를 추천해요</p>
                 </div>
             </div>
 
-            <div class="profile-form-group">
-                <label for="profileRegion">희망 지역</label>
-                <select id="profileRegion" class="profile-select">
-                    <option value="all">전국</option>
-                    <option value="서울">서울</option>
-                    <option value="경기">경기</option>
-                    <option value="부산">부산</option>
-                    <option value="대전">대전</option>
+            <div class="form-group">
+                <label class="form-label" for="profileName">이름</label>
+                <input type="text" id="profileName" class="form-input" placeholder="이름을 입력해주세요" autocomplete="name">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">창업단계 / 직업</label>
+                <div class="chip-row" id="profileTermGroup">
+                    <button type="button" class="chip active" data-value="all">전체</button>
+                    <button type="button" class="chip" data-value="예비창업자">예비창업자</button>
+                    <button type="button" class="chip" data-value="1년미만">1년 미만</button>
+                    <button type="button" class="chip" data-value="3년미만">3년 미만</button>
+                    <button type="button" class="chip" data-value="7년미만">7년 미만</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="profileRegion">희망 지역</label>
+                <select id="profileRegion" class="form-select">
+                    <option value="all">전국 (전체 지역)</option>
+                    <option value="서울">서울특별시</option>
+                    <option value="경기">경기도</option>
+                    <option value="인천">인천광역시</option>
+                    <option value="부산">부산광역시</option>
+                    <option value="대구">대구광역시</option>
+                    <option value="대전">대전광역시</option>
+                    <option value="광주">광주광역시</option>
+                    <option value="울산">울산광역시</option>
+                    <option value="세종">세종특별자치시</option>
+                    <option value="강원">강원특별자치도</option>
+                    <option value="충북">충청북도</option>
+                    <option value="충남">충청남도</option>
+                    <option value="전북">전라북도</option>
+                    <option value="전남">전라남도</option>
+                    <option value="경북">경상북도</option>
+                    <option value="경남">경상남도</option>
+                    <option value="제주">제주특별자치도</option>
                 </select>
             </div>
 
-            <div class="profile-form-group">
-                <label>관심 분야 (중복 선택 가능)</label>
-                <div class="chip-group" id="profileCategoryGroup">
-                    <button class="chip-btn active" data-value="support">지원금</button>
-                    <button class="chip-btn active" data-value="contest">공모전</button>
-                    <button class="chip-btn active" data-value="loan">금융지원</button>
+            <div class="form-group">
+                <label class="form-label">관심 분야 <span style="color: var(--text-low); font-weight: 400;">(중복 선택 가능)</span></label>
+                <div class="chip-row" id="profileCategoryGroup">
+                    <button type="button" class="chip active" data-value="support">지원금</button>
+                    <button type="button" class="chip active" data-value="contest">공모전</button>
+                    <button type="button" class="chip active" data-value="loan">금융지원</button>
                 </div>
             </div>
 
-            <button id="saveProfileBtn" style="width: 100%; margin-top: 10px; background: linear-gradient(135deg, var(--accent-primary), var(--primary)); border: none; color: var(--bg-dark); padding: 14px 20px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 1rem; transition: transform 0.2s;">
-                맞춤 프로필 저장
+            <button id="saveProfileBtn" class="save-btn">
+                프로필 저장하기
             </button>
         </div>
 
-        <div class="card fade-in-up" style="margin-bottom: 32px; animation-delay: 0.08s;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="margin: 0; font-family: var(--font-heading);">실시간 푸시 알림</h3>
+        <!-- 2. Notification Card -->
+        <div class="settings-card fade-in-up" style="animation-delay: 0.06s;">
+            <div class="settings-card-header">
+                <div class="settings-card-header-icon" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.2));">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2>알림 설정</h2>
+                    <p>새로운 공고가 등록되면 알려드려요</p>
+                </div>
+            </div>
+
+            <div class="notif-row">
+                <div class="notif-row-info">
+                    <h3>실시간 푸시 알림</h3>
+                    <p>관심 키워드가 포함된 새 지원사업이 등록되면 브라우저 알림으로 즉시 알려드립니다.</p>
+                </div>
                 <label class="switch">
                     <input type="checkbox" id="pushToggle" checked>
                     <span class="slider round"><span class="knob"></span></span>
                 </label>
             </div>
-            <p style="color: var(--text-med); font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px;">
-                관심 키워드가 포함된 새로운 지원 사업이 등록되면 브라우저 알림을 통해 즉시 알려드립니다.
-            </p>
-            <button id="testPushBtn" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); color: white; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; transition: all 0.2s; font-family: inherit;">
-                <i class="xi-bell-o"></i> 맞춤 알림 테스트 수신
+
+            <hr class="settings-divider">
+
+            <button id="testPushBtn" class="test-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                맞춤 알림 테스트 수신
             </button>
         </div>
 
-        <div class="section-title" style="margin-bottom: 24px;">
-            <h2 style="font-size: 1.5rem;">관심 키워드 관리</h2>
-        </div>
+        <!-- 3. Keyword Card -->
+        <div class="settings-card fade-in-up" style="animation-delay: 0.12s;">
+            <div class="settings-card-header">
+                <div class="settings-card-header-icon" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.2));">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="9" x2="20" y2="9"></line>
+                        <line x1="4" y1="15" x2="20" y2="15"></line>
+                        <line x1="10" y1="3" x2="8" y2="21"></line>
+                        <line x1="16" y1="3" x2="14" y2="21"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h2>관심 키워드 관리</h2>
+                    <p>키워드를 등록하면 관련 공고를 빠르게 찾을 수 있어요</p>
+                </div>
+            </div>
 
-        <div class="card fade-in-up" style="animation-delay: 0.1s;">
-            <div class="input-wrapper" style="margin-bottom: 24px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                    style="margin-right: 12px;">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                <input type="text" id="keywordInput" placeholder="키워드 추가 (예: AI, 청년창업, 바우처)">
-                <button id="addKeywordBtn"
-                    style="background: var(--accent-primary); border: none; color: var(--bg-dark); padding: 8px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; margin-left: 12px; transition: transform 0.2s;">추가</button>
+            <div class="keyword-add-row">
+                <input type="text" id="keywordInput" class="form-input" placeholder="키워드 추가 (예: AI, 청년창업, 바우처)">
+                <button id="addKeywordBtn" class="keyword-add-btn">추가</button>
             </div>
 
             <div class="tags-container" id="keywordList" style="justify-content: flex-start; gap: 10px;">
                 <!-- Keywords will be added here -->
             </div>
 
-            <div id="emptyKeywords" style="text-align: center; padding: 40px 0; color: var(--text-low); display: none;">
+            <div id="emptyKeywords" style="text-align: center; padding: 30px 0; color: var(--text-low); display: none;">
                 등록된 키워드가 없습니다.
             </div>
         </div>
@@ -223,8 +554,7 @@
         </a>
     </nav>
 
-
-    <!-- Toast Popup for User Feedback -->
+    <!-- Toast Popup -->
     <div id="toastPopup" class="toast-popup">프로필이 저장되었습니다.</div>
 
     <script src="scripts/settings.js"></script>
