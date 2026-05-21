@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     /* Color Palette - Futuristic Luxury */
     --bg-dark: #020617;
     --bg-card: rgba(15, 23, 42, 0.6);
@@ -366,7 +366,9 @@ h1 {
 }
 
 input[type="text"] {
-    width: 100%;
+    flex: 1;
+    width: 0;
+    min-width: 0;
     background: transparent;
     border: none;
     padding: 16px 0;
@@ -374,6 +376,11 @@ input[type="text"] {
     color: white;
     outline: none;
     font-weight: 500;
+}
+
+.input-wrapper button {
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 input[type="text"]::placeholder {
@@ -680,7 +687,7 @@ footer {
 
 /* --- Mobile Bottom Nav --- */
 .bottom-nav {
-    display: none;
+    display: none !important;
     position: fixed;
     bottom: 24px;
     left: 20px;
@@ -742,7 +749,7 @@ footer {
     }
 
     .bottom-nav {
-        display: flex;
+        display: flex !important;
     }
 
     .hero-section {
