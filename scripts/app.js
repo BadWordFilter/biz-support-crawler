@@ -1,4 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 서비스 워커 강제 등록 해제 및 캐시 전면 소거 (구버전 롤백 버그 해결)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for (let registration of registrations) {
+                registration.unregister().then(function(success) {
+                    if (success) console.log('Old Service Worker unregistered.');
+                });
+            }
+        });
+    }
+    if ('caches' in window) {
+        caches.keys().then(function(names) {
+            for (let name of names) {
+                caches.delete(name);
+            }
+        });
+    }
+
     const cardsGrid = document.getElementById('cardsGrid');
     const searchInput = document.getElementById('searchInput');
     const filterBtns = document.querySelectorAll('.filter-btn');
