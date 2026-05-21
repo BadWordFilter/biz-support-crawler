@@ -986,3 +986,112 @@ footer {
     padding: 0 20px;
     width: auto;
 }
+
+/* Profile Form & Chips */
+.profile-form-group {
+    margin-bottom: 20px;
+}
+.profile-form-group label {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--text-med);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+.profile-input-text {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+.profile-input-text:focus {
+    border-color: var(--accent-primary);
+}
+.profile-select {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+.chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.chip-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: var(--text-med);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.chip-btn:hover {
+    border-color: var(--accent-primary);
+    color: white;
+}
+.chip-btn.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--bg-dark);
+    font-weight: 700;
+}
+
+/* Recommended Section */
+.recommended-section {
+    padding: 40px 0;
+    background: linear-gradient(180deg, rgba(2, 6, 23, 0.4) 0%, transparent 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+.recommend-glow-card {
+    border: 1px solid transparent !important;
+    background: linear-gradient(var(--glass-bg), var(--glass-bg)) padding-box,
+                linear-gradient(135deg, var(--accent-primary), var(--primary)) border-box !important;
+    box-shadow: 0 8px 32px rgba(34, 211, 238, 0.1) !important;
+}
+.recommend-badge {
+    background: linear-gradient(135deg, var(--accent-primary), var(--primary)) !important;
+    color: var(--bg-dark) !important;
+    font-weight: 800 !important;
+}
+
+/* Toast Popup */
+.toast-popup {
+    position: fixed;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(34, 211, 238, 0.95);
+    backdrop-filter: blur(10px);
+    color: var(--bg-dark);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.toast-popup.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+

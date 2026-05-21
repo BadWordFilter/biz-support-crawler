@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterToggle = document.getElementById('filterToggle');
     const filterPanel = document.getElementById('filterPanel');
     const pagination = document.getElementById('pagination');
+    const recommendedSection = document.getElementById('recommendedSection');
 
     let currentFilter = 'all';
     let currentSearch = '';
@@ -38,8 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const itemsPerPage = 20;
     let filteredData = [];
 
-    // Initialize
+    // Initialize Pages and Recommendations
     if (typeof supportPrograms !== 'undefined') {
+        renderRecommendations();
         filterAndRender();
     } else {
         console.error("supportPrograms data not found. Please check data.js");
@@ -95,6 +97,131 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 150);
     });
 
+    // --- Recommendation Logic ---
+    function renderRecommendations() {
+        if (!recommendedSection) return;
+
+        const savedProfile = JSON.parse(localStorage.getItem('bizSupport_profile'));
+
+        if (!savedProfile || !savedProfile.name) {
+            // Render Onboarding Banner if no profile exists
+            recommendedSection.innerHTML = `
+                <div class="container">
+                    <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 24px; background: rgba(255, 255, 255, 0.02); border: 1px dashed var(--glass-border); border-radius: var(--radius-md); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);">
+                        <div style="font-size: 2.5rem; margin-bottom: 16px;">✨</div>
+                        <h3 style="margin: 0 0 8px 0; font-size: 1.35rem; font-family: var(--font-heading); color: white; font-weight: 700;">나만을 위한 맞춤 지원사업 추천 받기</h3>
+                        <p style="color: var(--text-med); font-size: 0.95rem; max-width: 500px; margin-bottom: 24px; line-height: 1.6;">
+                            이름, 창업 단계, 거주 지역을 설정하고 나에게 딱 맞는 국비 지원금과 정부 지원사업을 즉시 매칭 받아보세요!
+                        </p>
+                        <a href="settings.html" style="background: linear-gradient(135deg, var(--accent-primary), var(--primary)); border: none; color: var(--bg-dark); padding: 12px 28px; border-radius: 12px; cursor: pointer; font-weight: 800; text-decoration: none; font-size: 0.95rem; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(34, 211, 238, 0.3);">
+                            맞춤 프로필 설정하러 가기
+                        </a>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        // Matching Algorithm
+        let matchedPrograms = supportPrograms.filter(program => {
+            // 1. Match categories
+            const matchCategory = savedProfile.categories.includes(program.category);
+            
+            // 2. Match region (if profile region isn't 'all', check exact match)
+            const matchRegion = savedProfile.region === 'all' || program.region.includes(savedProfile.region);
+            
+            // 3. Match startup term (if profile term isn't 'all', check exact match)
+            const matchTerm = savedProfile.term === 'all' || program.startupTerm === savedProfile.term;
+
+            return matchCategory && matchRegion && matchTerm;
+        });
+
+        // Fallback: If matches are too narrow, soften matching criteria to show at least some relevant suggestions
+        if (matchedPrograms.length < 3) {
+            const secondaryMatches = supportPrograms.filter(program => {
+                const matchCategory = savedProfile.categories.includes(program.category);
+                const matchRegion = savedProfile.region === 'all' || program.region.includes(savedProfile.region);
+                return matchCategory && matchRegion && !matchedPrograms.includes(program);
+            });
+            matchedPrograms = [...matchedPrograms, ...secondaryMatches];
+        }
+
+        // Limit recommendations to top 4 cards
+        const recommendedItems = matchedPrograms.slice(0, 4);
+
+        if (recommendedItems.length === 0) {
+            recommendedSection.style.display = 'none';
+            return;
+        }
+
+        // Render matching cards with premium recommendation border
+        let termLabel = savedProfile.term === 'all' ? '전체' : savedProfile.term;
+        let regionLabel = savedProfile.region === 'all' ? '전국' : savedProfile.region;
+
+        recommendedSection.innerHTML = `
+            <div class="container">
+                <div class="section-title" style="margin-bottom: 24px;">
+                    <h2 style="font-size: 1.6rem; display: flex; align-items: center; gap: 8px;">
+                        ✨ <span style="background: linear-gradient(135deg, var(--accent-primary), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${savedProfile.name}</span>님을 위한 맞춤 추천 공고
+                    </h2>
+                    <p style="color: var(--text-med); font-size: 0.9rem; margin-top: 6px;">
+                        창업단계: <strong>${termLabel}</strong> | 희망지역: <strong>${regionLabel}</strong> 조건에 맞추어 실시간으로 엄선한 공고입니다.
+                    </p>
+                </div>
+                
+                <div class="cards-grid" id="recommendGrid"></div>
+            </div>
+        `;
+
+        const recommendGrid = document.getElementById('recommendGrid');
+
+        recommendedItems.forEach((program, index) => {
+            const card = document.createElement('div');
+            card.className = 'card recommend-glow-card fade-in-up';
+            card.style.animationDelay = `${index * 0.05}s`;
+
+            let badgeLabel = '';
+            switch (program.category) {
+                case 'support': badgeLabel = '지원금'; break;
+                case 'contest': badgeLabel = '공모전'; break;
+                case 'loan': badgeLabel = '금융지원'; break;
+                default: badgeLabel = '기타';
+            }
+
+            card.innerHTML = `
+                <div class="card-top">
+                    <span class="card-badge recommend-badge">${badgeLabel}</span>
+                    <div class="card-views">
+                        <i class="xi-eye-o"></i> ${program.views || 0}
+                    </div>
+                </div>
+                <h3>${program.title}</h3>
+                <div class="card-org">
+                    <i class="xi-building"></i> ${program.organization}
+                </div>
+                <div class="card-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">지역/구분</span>
+                        <span class="meta-value">${program.region} | ${program.agencyType}</span>
+                    </div>
+                    <div class="meta-item d-day-wrap">
+                        <span class="d-day-pill" style="background: linear-gradient(135deg, var(--accent-primary), var(--primary)); color: var(--bg-dark); font-weight: 700;">${program.dDay}</span>
+                    </div>
+                </div>
+                <div class="card-footer" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-low);">
+                    <span>마감: ${program.deadline}</span>
+                    <span style="color: var(--accent-primary); font-weight: 600;">${program.startupTerm}</span>
+                </div>
+            `;
+
+            card.addEventListener('click', () => {
+                if (program.link) window.open(program.link, '_blank');
+            });
+
+            recommendGrid.appendChild(card);
+        });
+    }
+
     function filterAndRender() {
         filteredData = supportPrograms.filter(program => {
             const matchFilter = currentFilter === 'all' || program.category === currentFilter;
@@ -136,8 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const paginatedItems = filteredData.slice(startIndex, endIndex);
 
         paginatedItems.forEach((program, index) => {
-
-
             const card = document.createElement('div');
             card.className = 'card fade-in-up';
             card.style.animationDelay = `${index * 0.05}s`;
