@@ -55,10 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${program.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
             </div>
             
-            <p style="line-height: 1.8; color: var(--text-secondary); margin-bottom: 30px;">
-                본 지원사업은 <strong>${program.organization}</strong>에서 주관하는 사업입니다.<br>
-                자세한 모집 요강과 접수 방법은 아래 공식 홈페이지를 통해 확인하실 수 있습니다.
-            </p>
+            <div class="detail-description-body" style="line-height: 1.8; color: var(--text-secondary); margin-bottom: 30px; white-space: pre-wrap; font-size: 0.95rem; border-top: 1px solid rgba(0,0,0,0.08); padding-top: 20px;">
+                ${program.description ? program.description.replace(/\n{3,}/g, '\n\n') : '상세 정보가 없습니다. 아래 공식 홈페이지 공고문을 확인해 주세요.'}
+            </div>
 
             <div class="detail-actions" style="display: flex; gap: 15px; flex-wrap: wrap;">
                 <a href="${program.link}" target="_blank" class="details-link" style="background: var(--primary); color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 600;">

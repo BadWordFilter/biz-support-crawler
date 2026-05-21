@@ -118,22 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const paginatedItems = filteredData.slice(startIndex, endIndex);
 
         paginatedItems.forEach((program, index) => {
-            // Inject In-feed Ad every 8 cards (but limit within page)
-            if (index > 0 && index % 8 === 0) {
-                const adContainer = document.createElement('div');
-                adContainer.className = 'adsense-container ad-infeed fade-in-up';
-                adContainer.innerHTML = `
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-format="fluid"
-                         data-ad-layout-key="-fb+5w+4e-db+86"
-                         data-ad-client="ca-pub-4540972419156905"
-                         data-ad-slot="##########"></ins>
-                    <span class="ad-placeholder-text">In-feed Ad Unit</span>
-                `;
-                cardsGrid.appendChild(adContainer);
-                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
-            }
+
 
             const card = document.createElement('div');
             card.className = 'card fade-in-up';

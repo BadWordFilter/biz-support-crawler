@@ -34,14 +34,15 @@ def fetch_data():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     }
 
-    # 모집 중인 모든 페이지 전수 조사 (데이터가 없을 때까지 무한 루프)
+    # Limit crawling to the first 3 pages (approx. 45 announcements) for speed and safety
     page = 1
-    while True:
+    max_pages = 3
+    while page <= max_pages:
         url = f"{TARGET_URL}?page={page}"
         print(f"Reading Page {page}...")
         
         try:
-            # 서버 부하 방지 및 차단 예방을 위해 살짝 대기
+            # Prevent blocking
             import time
             time.sleep(0.5)
             
@@ -49,7 +50,7 @@ def fetch_data():
             response.raise_for_status()
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            # K-Startup 리스트 구조 선택자
+            # Select K-Startup list items
             items = soup.select('.board_list-wrap > ul > li') or soup.select('.biz_list > li') or soup.select('.list_type01 > li')
             
             if not items:
@@ -111,6 +112,21 @@ def fetch_data():
                         elif ":" not in txt and len(txt) < 30:
                             organization = txt
 
+                    # Fetch detailed announcement description
+                    description_text = "상세 정보가 존재하지 않습니다. 공식 홈페이지 공고문을 확인해 주세요."
+                    if detail_url != TARGET_URL:
+                        try:
+                            # 0.3s delay to avoid hammer
+                            time.sleep(0.3)
+                            detail_res = requests.get(detail_url, headers=headers, timeout=10)
+                            if detail_res.status_code == 200:
+                                detail_soup = BeautifulSoup(detail_res.text, 'html.parser')
+                                desc_el = detail_soup.select_one('#contentViewHtml')
+                                if desc_el:
+                                    description_text = desc_el.get_text(separator='\n', strip=True)
+                        except Exception as detail_err:
+                            print(f"Error fetching detail page for {pbanc_sn}: {detail_err}")
+
                     all_crawled_data.append({
                         "id": pbanc_sn or str(len(all_crawled_data) + 1),
                         "title": title,
@@ -123,15 +139,17 @@ def fetch_data():
                         "dDay": calculate_dday(deadline_date),
                         "views": views_count,
                         "tags": [f"#{category_text}", f"#{region}"],
-                        "link": detail_url
+                        "link": detail_url,
+                        "description": description_text
                     })
                     seen_titles.add(title)
                     count_on_page += 1
-                except: continue
+                except Exception as inner_err:
+                    print(f"Error processing item on page {page}: {inner_err}")
+                    continue
             
             print(f"Page {page}: Added {count_on_page} new items.")
             
-            # 페이지당 아이템이 15개 미만이면 다음 페이지가 없을 가능성이 큼 (K-Startup 특성)
             if count_on_page == 0:
                 break
                 
